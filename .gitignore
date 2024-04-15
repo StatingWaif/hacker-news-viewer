@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+__pycache__/
+# *.sqlite3
+*.pyc
+
+node_modules/
+.venv
+build/
