@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -15,7 +15,12 @@ import { IComment } from "../Interfaces";
 import { addComment, getReplies } from "../api/itemsApi";
 import AddCommentWindow from "./AddCommentWindow";
 
-export default function Comment({ el }: { el: IComment }) {
+interface CommentProps {
+  el: IComment;
+}
+
+// export default function Comment({ el }: { el: IComment }) {
+const Comment: FC<CommentProps> = ({ el }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [replies, setReplies] = useState<IComment[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -96,4 +101,5 @@ export default function Comment({ el }: { el: IComment }) {
       />
     </>
   );
-}
+};
+export default Comment;

@@ -7,7 +7,9 @@ import StoryList from "../components/StoryList";
 export default function HomePage() {
   const [stories, setStories] = useState<IStory[]>([]);
   const updateStories = async () => {
-    getStories().then(setStories);
+    getStories()
+      .then(setStories)
+      .catch(() => {});
   };
   useEffect(() => {
     updateStories();
@@ -39,7 +41,7 @@ export default function HomePage() {
           >
             Обновить статьи
           </Button>
-          <StoryList stories={stories} />
+          {stories.length ? <StoryList stories={stories} /> : null}
         </Container>
       </main>
     </>

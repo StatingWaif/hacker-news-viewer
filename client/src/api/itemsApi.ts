@@ -28,31 +28,23 @@ import { IComment, IStory } from "../Interfaces";
 // };
 
 export const getStoryById = async (id: number): Promise<IStory> => {
-  return $host
-    .get(`stories/${id}`)
-    .then((data) => data.data)
-    .catch(console.log);
+  return $host.get(`stories/${id}`).then((data) => data.data);
+  // .catch(console.log);
 };
 
 export const getComments = async (id: number): Promise<IComment[]> => {
-  return $host
-    .get(`stories/${id}/comments`)
-    .then((response) => response.data)
-    .catch(console.log);
+  return $host.get(`stories/${id}/comments`).then((response) => response.data);
+  // .catch(console.log);
 };
 
 export const getReplies = async (id: number): Promise<IComment[]> => {
-  return $host
-    .get(`comments/${id}/replies`)
-    .then((response) => response.data)
-    .catch(console.log);
+  return $host.get(`comments/${id}/replies`).then((response) => response.data);
+  // .catch(console.log);
 };
 
 export const getStories = async (): Promise<IStory[]> => {
-  return $host
-    .get("stories")
-    .then((response) => response.data)
-    .catch(console.log);
+  return $host.get("stories").then((response) => response.data);
+  // .catch(console.log);
 };
 
 export const addComment = async (
@@ -62,5 +54,5 @@ export const addComment = async (
   text: string
 ) => {
   const postData = { story_id, parent_comment_id, author, text };
-  return $host.post(`comments/add`, postData).catch(console.log);
+  return $host.post(`comments/add`, postData);
 };

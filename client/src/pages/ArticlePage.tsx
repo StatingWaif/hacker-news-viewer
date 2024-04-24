@@ -16,16 +16,27 @@ export default function ArticlePage() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [author, setAuthor] = useState<string>("");
   const [text, setText] = useState<string>("");
+  const [notFound, setNotFound] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    let story: IStory;
+    // let story: IStory;
     if (numberId) {
       getStoryById(numberId)
-        .then((data) => (story = data))
-        .then(() => setStory(story))
+        // .then((data) => (story = data))
+        .then(setStory)
         .then(() => getComments(numberId))
-        .then(setComments);
+        .then(setComments)
+        .catch(() => {
+          setNotFound(true);
+        });
+
+      // .then((story) => {
+      //   setStory(story);
+      //   return story
+      // }).then();
+    } else {
+      setNotFound(true);
     }
   }, [numberId]);
 
@@ -35,76 +46,85 @@ export default function ArticlePage() {
 
   const handleAddComment = () => {
     if (author && text) {
-      addComment(numberId, null, author, text).then(() => {
-        getComments(numberId).then(setComments);
-        setOpenModal(false);
-        setAuthor("");
-        setText("");
-      });
+      addComment(numberId, null, author, text)
+        .then(() => {
+          getComments(numberId).then(setComments);
+          setOpenModal(false);
+          setAuthor("");
+          setText("");
+        })
+        .catch(() => {});
     }
   };
 
   return (
     <>
-      <CssBaseline />
-      <Container
-        maxWidth="xl"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-      >
-        {story ? <StoryInfo story={story} /> : null}
-
-        <Button
-          onClick={() => navigate("/")}
-          variant="contained"
-          sx={{ marginBottom: "1rem" }}
+      <>
+        <CssBaseline />
+        <Container
+          maxWidth="xl"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "1rem",
+          }}
         >
-          Назад
-        </Button>
-        <Box sx={{ width: "100%" }}>
-          <Typography align="center" variant="h4" gutterBottom>
-            Комментарии
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "1rem",
-            }}
+          {story ? <StoryInfo story={story} /> : null}
+
+          <Button
+            onClick={() => navigate("/")}
+            variant="contained"
+            sx={{ marginBottom: "1rem" }}
           >
-            <Button
-              variant="outlined"
-              onClick={() => {
-                let story: IStory;
+            Назад
+          </Button>
+          {!notFound ? (
+            <Box sx={{ width: "100%" }}>
+              <Typography align="center" variant="h4" gutterBottom>
+                Комментарии
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "1rem",
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    let story: IStory;
 
-                getStoryById(numberId)
-                  .then((data) => (story = data))
-                  .then(() => setStory(story))
-                  .then(() => getComments(numberId))
-                  .then(setComments);
-              }}
-            >
-              Обновить
-            </Button>
-            <Button onClick={handleOpenModal}>Добавить комментарий</Button>
-          </Box>
+                    getStoryById(numberId)
+                      .then((data) => (story = data))
+                      .then(() => setStory(story))
+                      .then(() => getComments(numberId))
+                      .then(setComments)
+                      .catch(() => {});
+                  }}
+                >
+                  Обновить
+                </Button>
+                <Button onClick={handleOpenModal}>Добавить комментарий</Button>
+              </Box>
 
-          <CommentList comments={comments} />
-        </Box>
-      </Container>
-      <AddCommentWindow
-        authorState={[author, setAuthor]}
-        textState={[text, setText]}
-        modalState={[openModal, setOpenModal]}
-        handleAddComment={handleAddComment}
-      />
+              {comments.length ? <CommentList comments={comments} /> : null}
+            </Box>
+          ) : (
+            <Typography>Not found</Typography>
+          )}
+        </Container>
+        <AddCommentWindow
+          authorState={[author, setAuthor]}
+          textState={[text, setText]}
+          modalState={[openModal, setOpenModal]}
+          handleAddComment={handleAddComment}
+        />
+      </>
     </>
   );
 }

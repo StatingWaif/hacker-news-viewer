@@ -4,7 +4,11 @@ import formatDate from "../utils/formatDate";
 import { IStory } from "../Interfaces";
 import PersonIcon from "@mui/icons-material/Person";
 
-export default function StoryInfo({ story }: { story: IStory }) {
+interface StoryInfoProps {
+  story: IStory;
+}
+
+export default function StoryInfo({ story }: StoryInfoProps) {
   return (
     <Box p={4}>
       <Typography variant="h3" color="secondary" gutterBottom>
